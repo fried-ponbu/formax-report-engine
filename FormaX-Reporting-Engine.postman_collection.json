@@ -1,0 +1,303 @@
+{
+  "info": {
+    "name": "FormaX Reporting Engine",
+    "description": "FormaX Reporting Engine API - Evaluation Edition.\n\nAsynchronous renderer that fills Excel templates from JSON. Set the `base_url` and `jwt_token` collection variables before running. If the server has REPORTING_JWT_SECRET unset, leave jwt_token empty - auth is disabled for local evaluation only.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jwt_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "jwt_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "template_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "report_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Get health / app identity",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "health"
+              ]
+            },
+            "description": "No auth required. Returns app name, version, edition, and the evaluation concurrency limit."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Templates",
+      "item": [
+        {
+          "name": "List templates",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/templates",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "templates"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Upload template",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/templates",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "templates"
+              ]
+            },
+            "description": "Multipart upload. `file` should point at the example template shipped in the distribution under examples/hospital_report.xlsx (or your own .xlsx). Response returns the generated `id` - copy it into the template_id collection variable.",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "hospital_report",
+                  "type": "text"
+                },
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "examples/hospital_report.xlsx"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get template metadata",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/templates/{{template_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "templates",
+                "{{template_id}}"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Get template sample payload",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/templates/{{template_id}}/sample",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "templates",
+                "{{template_id}}",
+                "sample"
+              ]
+            },
+            "description": "Cached, best-effort sample JSON payload generated from the template's markers at upload time. Use this as a starting point for the Submit Report body."
+          },
+          "response": []
+        },
+        {
+          "name": "Download template file",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/templates/{{template_id}}/download",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "templates",
+                "{{template_id}}",
+                "download"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Replace template",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/templates/{{template_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "templates",
+                "{{template_id}}"
+              ]
+            },
+            "description": "Multipart upload. Keeps the same id and name, overwrites the .xlsx content and regenerates the cached sample.",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "examples/hospital_report.xlsx"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete template",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/templates/{{template_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "templates",
+                "{{template_id}}"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "item": [
+        {
+          "name": "Submit report",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reports",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports"
+              ]
+            },
+            "description": "Returns immediately with status QUEUED. Set the template_id collection variable to a template you've already uploaded (or its name).",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"report\": {\n    \"id\": \"018f2c1a-1b2b-7c3d-9e4f-000000000001\",\n    \"title\": \"Monthly Hospital Report\",\n    \"version\": \"1.0\",\n    \"created_at\": \"2026-06-01T08:00:00Z\",\n    \"generated_by\": \"nestjs-billing-service\",\n    \"locale\": \"en-US\",\n    \"timezone\": \"UTC\"\n  },\n  \"metadata\": {\n    \"company\": {\n      \"name\": \"St. Mary General Hospital\"\n    },\n    \"logo\": null,\n    \"period\": {\n      \"from\": \"2026-05-01\",\n      \"to\": \"2026-05-31\"\n    },\n    \"parameters\": {\n      \"branch\": \"Main Campus\"\n    }\n  },\n  \"template_id\": \"{{template_id}}\",\n  \"output_format\": \"xlsx\",\n  \"sheets\": [\n    {\n      \"name\": \"Patients\",\n      \"template_sheet\": \"Patients\",\n      \"metadata\": {\n        \"visible\": true\n      },\n      \"sections\": [\n        {\n          \"title\": \"Admitted Patients\",\n          \"visible_if_empty\": false,\n          \"components\": [\n            {\n              \"type\": \"table\",\n              \"name\": \"patient\",\n              \"rows\": [\n                {\n                  \"name\": \"John Doe\",\n                  \"bed\": \"A-101\",\n                  \"admission_date\": \"2026-05-02\",\n                  \"diagnosis\": \"Pneumonia\",\n                  \"total_charges\": 1250.5\n                },\n                {\n                  \"name\": \"Jane Smith\",\n                  \"bed\": \"B-204\",\n                  \"admission_date\": \"2026-05-05\",\n                  \"diagnosis\": \"Fracture\",\n                  \"total_charges\": 980.0\n                },\n                {\n                  \"name\": \"Carlos Ruiz\",\n                  \"bed\": \"A-102\",\n                  \"admission_date\": \"2026-05-10\",\n                  \"diagnosis\": \"Appendicitis\",\n                  \"total_charges\": 3400.75\n                }\n              ],\n              \"summary\": {\n                \"values\": {\n                  \"total_charges\": 5631.25\n                }\n              }\n            }\n          ]\n        }\n      ]\n    },\n    {\n      \"name\": \"BedOccupancy\",\n      \"template_sheet\": \"BedOccupancy\",\n      \"metadata\": {\n        \"visible\": true\n      },\n      \"sections\": [\n        {\n          \"title\": \"Occupancy by Ward and Day\",\n          \"visible_if_empty\": false,\n          \"components\": [\n            {\n              \"type\": \"matrix\",\n              \"name\": \"bed\",\n              \"row_field\": \"ward\",\n              \"column_field\": \"day\",\n              \"value_field\": \"occupied_beds\",\n              \"aggregate\": \"SUM\",\n              \"sort\": \"ascending\",\n              \"data\": [\n                {\n                  \"ward\": \"ICU\",\n                  \"day\": \"Mon\",\n                  \"occupied_beds\": 8\n                },\n                {\n                  \"ward\": \"ICU\",\n                  \"day\": \"Tue\",\n                  \"occupied_beds\": 9\n                },\n                {\n                  \"ward\": \"General\",\n                  \"day\": \"Mon\",\n                  \"occupied_beds\": 22\n                },\n                {\n                  \"ward\": \"General\",\n                  \"day\": \"Tue\",\n                  \"occupied_beds\": 20\n                },\n                {\n                  \"ward\": \"Pediatrics\",\n                  \"day\": \"Mon\",\n                  \"occupied_beds\": 5\n                },\n                {\n                  \"ward\": \"Pediatrics\",\n                  \"day\": \"Tue\",\n                  \"occupied_beds\": 6\n                }\n              ]\n            }\n          ]\n        }\n      ]\n    },\n    {\n      \"name\": \"Summary\",\n      \"template_sheet\": \"Summary\",\n      \"metadata\": {\n        \"visible\": true\n      },\n      \"sections\": [\n        {\n          \"title\": \"Key Figures\",\n          \"visible_if_empty\": false,\n          \"components\": [\n            {\n              \"type\": \"key_value\",\n              \"name\": \"summary\",\n              \"items\": {\n                \"Total Patients\": 3,\n                \"Total Charges\": 5631.25,\n                \"Average Occupancy\": \"78%\"\n              }\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get report status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/{{report_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "{{report_id}}"
+              ]
+            },
+            "description": "Poll until status is SUCCESS or FAILED. SUCCESS includes report_name, generated_at, and download_url."
+          },
+          "response": []
+        },
+        {
+          "name": "Download rendered report",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/{{report_id}}/download",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "reports",
+                "{{report_id}}",
+                "download"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
