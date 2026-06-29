@@ -144,13 +144,3 @@ complete example payload, with `template_id` pointed at the
 `{{template_id}}` variable.
 
 ## Logging
-
-Every log line is plain English with no embedded filesystem paths —
-intentional, so logs are safe to forward to a centralized log collector
-without leaking host details:
-
-```
-2026-06-29 00:05:54 INFO renderer.startup: FormaX 0.1.0 - Asynchronous Excel Reporting Engine
-2026-06-29 00:05:54 INFO renderer.startup: Edition: Evaluation (no expiry date, max 5 concurrent report renders)
-2026-06-29 00:05:54 INFO renderer.startup: Startup complete - ready to accept requests
-```
