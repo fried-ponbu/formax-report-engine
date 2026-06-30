@@ -154,6 +154,18 @@ complete example payload, with `template_id` pointed at the
 2026-06-29 00:05:54 INFO renderer.startup: Startup complete - ready to accept requests
 ```
 
+## Management Dashboard
+
+FormaX includes a web-based management dashboard — template usage stats,
+job history, system metrics, storage housekeeping, and one-click backups.
+
+**The dashboard is a licensed add-on** and requires a license key to
+activate. To enquire about dashboard access for your deployment, open an issue at:
+
+**https://github.com/fried-ponbu/formax-report-engine/issues**
+
+---
+
 ## Renaming files
 
 If you need to rename anything in this folder for your own distribution
