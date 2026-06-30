@@ -9,10 +9,13 @@ Install guide for the FormaX Reporting Engine distribution.
 | `formax-reporting-engine_<version>_amd64.deb` | The package — install this on a Debian/Ubuntu host, or use it to build the Docker image (below). Contains the compiled binary plus an example template/sample payload under `examples/`. |
 | `Dockerfile` | Builds a runtime container image from the `.deb` above. Run `docker build -t formax-reporting-engine .` from inside this folder. |
 | `FormaX-Reporting-Engine.postman_collection.json` | Every endpoint, ready to import into Postman. |
-| `DISTRIBUTION.md` | This file. |
+| `TEMPLATE_GUIDE.md` | The JSON payload format and Excel template authoring reference — placeholders, tables, matrices, headers/footers, page numbers, output formats. |
+| `README.md` | Customer-facing overview and quick-start guide. |
+| `formax-logo.jpeg` | FormaX logo image (referenced by `README.md`). |
+| `DISTRIBUTION.md` | This file — installation only. |
 
-No Python (or anything else) needs to be installed on the target machine
-beforehand — the package is fully self-contained.
+Nothing needs to be installed on the target machine beforehand — the
+package is fully self-contained.
 
 ## This is an Evaluation build
 
@@ -143,4 +146,30 @@ The collection's `Submit report` request body is pre-filled with a
 complete example payload, with `template_id` pointed at the
 `{{template_id}}` variable.
 
-## Logging
+## Startup log
+
+```
+2026-06-29 00:05:54 INFO renderer.startup: FormaX 0.1.0 - Asynchronous Excel Reporting Engine
+2026-06-29 00:05:54 INFO renderer.startup: Edition: Evaluation (no expiry date, max 5 concurrent report renders)
+2026-06-29 00:05:54 INFO renderer.startup: Startup complete - ready to accept requests
+```
+
+## Renaming files
+
+If you need to rename anything in this folder for your own distribution
+process:
+
+- **`formax-reporting-engine_<version>_amd64.deb`** — safe to rename
+  freely; `dpkg -i` reads the package name from inside the file, not from
+  the filename on disk.
+- **`Dockerfile`** — must keep this exact name for `docker build .` to
+  find it automatically, or pass `-f <new-name>` explicitly. It still
+  expects exactly one `*.deb` file alongside it (the wildcard `COPY *.deb`
+  inside it matches whatever `.deb` is present, regardless of its name).
+- **`FormaX-Reporting-Engine.postman_collection.json`** — safe to rename;
+  Postman reads the collection name from inside the file when importing.
+- Internal names that do **not** change regardless of file renaming: the
+  installed binary is always `/opt/formax/reporting-engine/reporting-engine`,
+  the systemd service is always `formax-reporting-engine`, and the
+  Docker image tag from a default build is always `formax-reporting-engine`
+  unless you pass `-t <other-tag>` to `docker build`.
