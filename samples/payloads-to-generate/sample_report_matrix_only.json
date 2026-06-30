@@ -1,0 +1,54 @@
+{
+  "report": {
+    "id": "018f2c1a-1b2b-7c3d-9e4f-000000000003",
+    "title": "ER Admissions by Department and Shift",
+    "version": "1.0",
+    "created_at": "2026-06-01T08:00:00Z",
+    "generated_by": "nestjs-er-service",
+    "locale": "en-US",
+    "timezone": "UTC"
+  },
+  "metadata": {
+    "company": { "name": "St. Mary General Hospital" },
+    "logo": null,
+    "period": { "from": "2026-05-01", "to": "2026-05-07" },
+    "parameters": { "site": "Main Campus" }
+  },
+  "template_id": "er_admissions",
+  "output_format": "xlsx",
+  "sheets": [
+    {
+      "name": "ERAdmissions",
+      "template_sheet": "ERAdmissions",
+      "metadata": { "visible": true },
+      "sections": [
+        {
+          "title": "Admissions",
+          "visible_if_empty": false,
+          "components": [
+            {
+              "type": "matrix",
+              "name": "admissions",
+              "row_field": "department",
+              "column_field": "shift",
+              "value_field": "admissions",
+              "aggregate": "SUM",
+              "sort": "ascending",
+              "data": [
+                { "department": "Cardiology", "shift": "Morning", "admissions": 4 },
+                { "department": "Cardiology", "shift": "Evening", "admissions": 6 },
+                { "department": "Cardiology", "shift": "Night", "admissions": 2 },
+                { "department": "Trauma", "shift": "Morning", "admissions": 7 },
+                { "department": "Trauma", "shift": "Evening", "admissions": 9 },
+                { "department": "Trauma", "shift": "Night", "admissions": 5 },
+                { "department": "Pediatrics", "shift": "Morning", "admissions": 3 },
+                { "department": "Pediatrics", "shift": "Evening", "admissions": 2 },
+                { "department": "Pediatrics", "shift": "Night", "admissions": 1 }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

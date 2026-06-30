@@ -1,0 +1,96 @@
+{
+  "report": {
+    "id": "018f2c1a-1b2b-7c3d-9e4f-000000000001",
+    "title": "Monthly Hospital Report",
+    "version": "1.0",
+    "created_at": "2026-06-01T08:00:00Z",
+    "generated_by": "nestjs-billing-service",
+    "locale": "en-US",
+    "timezone": "UTC"
+  },
+  "metadata": {
+    "company": { "name": "St. Mary General Hospital" },
+    "logo": null,
+    "period": { "from": "2026-05-01", "to": "2026-05-31" },
+    "parameters": { "branch": "Main Campus" }
+  },
+  "template_id": "hospital_report",
+  "output_format": "xlsx",
+  "sheets": [
+    {
+      "name": "Patients",
+      "template_sheet": "Patients",
+      "metadata": { "visible": true },
+      "sections": [
+        {
+          "title": "Admitted Patients",
+          "visible_if_empty": false,
+          "components": [
+            {
+              "type": "table",
+              "name": "patient",
+              "rows": [
+                { "name": "John Doe", "bed": "A-101", "admission_date": "2026-05-02", "diagnosis": "Pneumonia", "total_charges": 1250.50 },
+                { "name": "Jane Smith", "bed": "B-204", "admission_date": "2026-05-05", "diagnosis": "Fracture", "total_charges": 980.00 },
+                { "name": "Carlos Ruiz", "bed": "A-102", "admission_date": "2026-05-10", "diagnosis": "Appendicitis", "total_charges": 3400.75 }
+              ],
+              "summary": { "values": { "total_charges": 5631.25 } }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "BedOccupancy",
+      "template_sheet": "BedOccupancy",
+      "metadata": { "visible": true },
+      "sections": [
+        {
+          "title": "Occupancy by Ward and Day",
+          "visible_if_empty": false,
+          "components": [
+            {
+              "type": "matrix",
+              "name": "bed",
+              "row_field": "ward",
+              "column_field": "day",
+              "value_field": "occupied_beds",
+              "aggregate": "SUM",
+              "sort": "ascending",
+              "data": [
+                { "ward": "ICU", "day": "Mon", "occupied_beds": 8 },
+                { "ward": "ICU", "day": "Tue", "occupied_beds": 9 },
+                { "ward": "General", "day": "Mon", "occupied_beds": 22 },
+                { "ward": "General", "day": "Tue", "occupied_beds": 20 },
+                { "ward": "Pediatrics", "day": "Mon", "occupied_beds": 5 },
+                { "ward": "Pediatrics", "day": "Tue", "occupied_beds": 6 }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Summary",
+      "template_sheet": "Summary",
+      "metadata": { "visible": true },
+      "sections": [
+        {
+          "title": "Key Figures",
+          "visible_if_empty": false,
+          "components": [
+            {
+              "type": "key_value",
+              "name": "summary",
+              "items": {
+                "Total Patients": 3,
+                "Total Charges": 5631.25,
+                "Average Occupancy": "78%"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

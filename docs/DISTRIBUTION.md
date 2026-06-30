@@ -6,12 +6,15 @@ Install guide for the FormaX Reporting Engine distribution.
 
 | File | What it's for |
 |---|---|
-| `formax-reporting-engine_<version>_amd64.deb` | The package — install this on a Debian/Ubuntu host, or use it to build the Docker image (below). Contains the compiled binary plus an example template/sample payload under `examples/`. |
-| `Dockerfile` | Builds a runtime container image from the `.deb` above. Run `docker build -t formax-reporting-engine .` from inside this folder. |
-| `FormaX-Reporting-Engine.postman_collection.json` | Every endpoint, ready to import into Postman. |
+| `../formax-reporting-engine_<version>_amd64.deb` | The package — install this on a Debian/Ubuntu host, or use it to build the Docker image (below). Contains the compiled binary plus an example template/sample payload under `examples/`. |
+| `../Dockerfile` | Builds a runtime container image from the `.deb` above. Run `docker build -t formax-reporting-engine .` from the distribution root. |
+| `../api/postman/FormaX-Reporting-Engine.postman_collection.json` | Every endpoint, ready to import into Postman. |
+| `../samples/templates-to-upload/` | Example `.xlsx` templates intended to be uploaded to `POST /templates`. |
+| `../samples/payloads-to-generate/` | Example JSON payloads intended to be submitted to `POST /reports`. |
+| `../samples/archives/samples.zip` | Zip archive containing the same sample templates and payloads with the organized folder layout. |
 | `TEMPLATE_GUIDE.md` | The JSON payload format and Excel template authoring reference — placeholders, tables, matrices, headers/footers, page numbers, output formats. |
-| `README.md` | Customer-facing overview and quick-start guide. |
-| `formax-logo.jpeg` | FormaX logo image (referenced by `README.md`). |
+| `../README.md` | Customer-facing overview and quick-start guide. |
+| `assets/formax-logo.jpeg` | FormaX logo image (referenced by `README.md`). |
 | `DISTRIBUTION.md` | This file — installation only. |
 
 Nothing needs to be installed on the target machine beforehand — the
@@ -92,8 +95,9 @@ docker run -d \
 docker logs -f formax-reporting-engine
 ```
 
-Run both commands from inside this folder (the `Dockerfile` expects the
-`.deb` alongside it). `/var/lib/formax` is a declared volume so
+Run both commands from the distribution root (the directory containing
+`Dockerfile` and the `.deb`; in this repository that is the top-level
+folder, one level above `docs/`). `/var/lib/formax` is a declared volume so
 templates/outputs/the SQLite tracking DB survive container recreation.
 
 ---
@@ -114,8 +118,8 @@ curl -s -X POST http://localhost:8000/templates \
 # 2. Ask the server for a sample payload built from that template's markers
 curl -s -H "Authorization: Bearer $TOKEN" \
   http://localhost:8000/templates/0199.../sample
-# Same shape as the bundled examples/hospital_report.sample.json, but with
-# the real template_id already filled in instead of "<template_id>".
+# Same role as the bundled samples/payloads-to-generate/sample_report.json,
+# but with the real template_id already filled in instead of "<template_id>".
 
 # 3. Adapt the sample's field values to real data, then submit it
 curl -s -X POST http://localhost:8000/reports \
@@ -130,13 +134,17 @@ template has a real id (omit the `Authorization` header if
 
 ## Using the Postman collection
 
-1. Import `FormaX-Reporting-Engine.postman_collection.json` into Postman.
+1. Import `api/postman/FormaX-Reporting-Engine.postman_collection.json`
+   into Postman.
 2. Set the collection variables: `base_url` (e.g. `http://localhost:8000`),
    `jwt_token` (leave blank if auth is disabled), `template_id`,
    `report_id`.
-3. Run **Templates → Upload template** (attach
-   `examples/hospital_report.xlsx` from the installed package to the
-   `file` field) — copy the returned `id` into the `template_id` variable.
+3. Run **Templates → Upload template**.
+   For the installed package, attach
+   `examples/hospital_report.xlsx` to the `file` field.
+   For the unpacked distribution folder, use
+   `samples/templates-to-upload/hospital_report.xlsx`.
+   Copy the returned `id` into the `template_id` variable.
 4. Run **Templates → Get template sample payload** to see the expected
    JSON shape for that template.
 5. Run **Reports → Submit report**, then **Reports → Get report status**
@@ -168,7 +176,7 @@ activate. To enquire about dashboard access for your deployment, open an issue a
 
 ## Renaming files
 
-If you need to rename anything in this folder for your own distribution
+If you need to rename anything in this distribution for your own
 process:
 
 - **`formax-reporting-engine_<version>_amd64.deb`** — safe to rename
@@ -178,8 +186,9 @@ process:
   find it automatically, or pass `-f <new-name>` explicitly. It still
   expects exactly one `*.deb` file alongside it (the wildcard `COPY *.deb`
   inside it matches whatever `.deb` is present, regardless of its name).
-- **`FormaX-Reporting-Engine.postman_collection.json`** — safe to rename;
-  Postman reads the collection name from inside the file when importing.
+- **`api/postman/FormaX-Reporting-Engine.postman_collection.json`** — safe
+  to rename; Postman reads the collection name from inside the file when
+  importing.
 - Internal names that do **not** change regardless of file renaming: the
   installed binary is always `/opt/formax/reporting-engine/reporting-engine`,
   the systemd service is always `formax-reporting-engine`, and the

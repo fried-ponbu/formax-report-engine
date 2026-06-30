@@ -95,7 +95,7 @@
                 "templates"
               ]
             },
-            "description": "Multipart upload. `file` should point at the example template shipped in the distribution under examples/hospital_report.xlsx (or your own .xlsx). Response returns the generated `id` - copy it into the template_id collection variable.",
+            "description": "Multipart upload. `file` should point at the example template shipped in the distribution under samples/templates-to-upload/hospital_report.xlsx (or your own .xlsx). Response returns the generated `id` - copy it into the template_id collection variable.",
             "body": {
               "mode": "formdata",
               "formdata": [
@@ -107,7 +107,7 @@
                 {
                   "key": "file",
                   "type": "file",
-                  "src": "examples/hospital_report.xlsx"
+                  "src": "samples/templates-to-upload/hospital_report.xlsx"
                 }
               ]
             }
@@ -195,7 +195,7 @@
                 {
                   "key": "file",
                   "type": "file",
-                  "src": "examples/hospital_report.xlsx"
+                  "src": "samples/templates-to-upload/hospital_report.xlsx"
                 }
               ]
             }

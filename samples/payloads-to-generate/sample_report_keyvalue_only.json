@@ -1,0 +1,47 @@
+{
+  "report": {
+    "id": "018f2c1a-1b2b-7c3d-9e4f-000000000004",
+    "title": "Patient Discharge Summary",
+    "version": "1.0",
+    "created_at": "2026-06-01T08:00:00Z",
+    "generated_by": "nestjs-discharge-service",
+    "locale": "en-US",
+    "timezone": "UTC"
+  },
+  "metadata": {
+    "company": { "name": "St. Mary General Hospital" },
+    "logo": null,
+    "period": {},
+    "parameters": {}
+  },
+  "template_id": "discharge_summary",
+  "output_format": "xlsx",
+  "sheets": [
+    {
+      "name": "DischargeSummary",
+      "template_sheet": "DischargeSummary",
+      "metadata": { "visible": true },
+      "sections": [
+        {
+          "title": "Discharge Details",
+          "visible_if_empty": false,
+          "components": [
+            {
+              "type": "key_value",
+              "name": "discharge",
+              "items": {
+                "Patient Name": "Maria Gonzales",
+                "Bed": "C-303",
+                "Admission Date": "2026-05-12",
+                "Discharge Date": "2026-05-18",
+                "Attending Physician": "Dr. Alan Reyes",
+                "Diagnosis": "Community-acquired pneumonia",
+                "Discharge Status": "Recovered"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
